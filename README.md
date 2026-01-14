@@ -10,8 +10,7 @@
 
 > **WARNING: This is an early test release with known bugs. Use at your own risk!**
 >
-> This version is provided for testing and feedback purposes only. Data loss, crashes, and unexpected behavior may occur. Please backup your important files before using.
-
+> This version is provided for testing and feedback purposes only. 
 ---
 
 ## ✨ Features
@@ -88,3 +87,4 @@ This software is provided as-is for testing purposes.
 ---
 
 _Made with ❤️ for desktop organization enthusiasts_
+
