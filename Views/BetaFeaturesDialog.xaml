@@ -1,0 +1,111 @@
+<Window x:Class="DeskGrid.Views.BetaFeaturesDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Beta Features"
+        Width="380" Height="350"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Style x:Key="BetaButton" TargetType="Button">
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#F59E0B"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="16,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#D97706"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="#F0181825"
+            BorderBrush="#F59E0B"
+            BorderThickness="2"
+            CornerRadius="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" 
+                    Background="#30F59E0B" 
+                    CornerRadius="12,12,0,0"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                        <TextBlock Text="🧪" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="Beta Features"
+                                   Foreground="#F59E0B"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Content="✕" 
+                            HorizontalAlignment="Right"
+                            Margin="0,0,8,0"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="#888888"
+                            FontSize="14"
+                            Cursor="Hand"
+                            Click="CloseButton_Click"/>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <StackPanel Grid.Row="1" Margin="20,16">
+                <Border Background="#20F59E0B" CornerRadius="8" Padding="12" Margin="0,0,0,16">
+                    <TextBlock Foreground="#F59E0B" FontSize="12" TextWrapping="Wrap">
+                        ⚠️ These features are experimental and may not work perfectly. Use with caution!
+                    </TextBlock>
+                </Border>
+
+                <TextBlock Text="EXPERIMENTAL FEATURES"
+                           Foreground="#888888"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,12"/>
+
+                <Button Content="📦  Embed Application"
+                        Click="EmbedApp_Click"
+                        Style="{StaticResource BetaButton}"
+                        Margin="0,0,0,8"/>
+
+                <TextBlock Foreground="#666666" FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0">
+                    Embeds external applications inside a portal window. Works best with simple apps.
+                </TextBlock>
+            </StackPanel>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" BorderBrush="#30FFFFFF" BorderThickness="0,1,0,0">
+                <TextBlock Text="More beta features coming soon..."
+                           Foreground="#555555"
+                           FontSize="11"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

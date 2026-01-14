@@ -1,0 +1,41 @@
+# Build results
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+publish/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*_wpftmp.csproj
+
+# NuGet
+packages/
+*.nupkg
+
+# Build logs and error files
+build_output.txt
+build_log.txt
+build_errors.txt
+errors.txt
+errors.log
+allerrors.txt
+
+# Installer output
+*.exe
+!DeskGrid.exe
+
+# Backup files
+*_backup.json
+*.bak
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini

@@ -1,0 +1,255 @@
+<Window x:Class="DeskGrid.Views.AppPortalWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DeskGrid.Views"
+        Title="{Binding Title}"
+        Width="400" Height="300"
+        MinWidth="320" MinHeight="200"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="CanResizeWithGrip"
+        ShowInTaskbar="False"
+        Topmost="False">
+
+    <Window.Resources>
+        <!-- Header Button Style -->
+        <Style x:Key="HeaderButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#40FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#60FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Action Button Style (Start/Stop) -->
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="60"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="8,2"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border x:Name="MainBorder"
+            Background="{StaticResource PortalBackgroundBrush}"
+            BorderBrush="{StaticResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border x:Name="HeaderBorder"
+                    Grid.Row="0"
+                    Background="{StaticResource PortalHeaderBrush}"
+                    CornerRadius="8,8,0,0"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown"
+                    MouseMove="Header_MouseMove"
+                    MouseLeftButtonUp="Header_MouseLeftButtonUp">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Title -->
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Title}"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               FontFamily="{StaticResource PrimaryFont}"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,0"
+                               TextTrimming="CharacterEllipsis"/>
+
+                    <!-- Header Buttons -->
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                Margin="0,0,4,0">
+                        
+                        <!-- Roll-up Button -->
+                        <Button x:Name="RollUpButton"
+                                Width="24" Height="24"
+                                Click="RollUpButton_Click"
+                                Style="{StaticResource HeaderButtonStyle}"
+                                ToolTip="Roll Up">
+                            <Path Data="M4,12 L12,4 L20,12"
+                                  Stroke="{StaticResource TextSecondaryBrush}"
+                                  StrokeThickness="1.5"
+                                  Width="12" Height="8"
+                                  Stretch="Uniform"
+                                  RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <RotateTransform x:Name="RollUpArrow" Angle="0"/>
+                                </Path.RenderTransform>
+                            </Path>
+                        </Button>
+
+                        <!-- Close Button -->
+                        <Button x:Name="CloseButton"
+                                Width="24" Height="24"
+                                Click="CloseButton_Click"
+                                Style="{StaticResource HeaderButtonStyle}"
+                                ToolTip="Close Portal">
+                            <Path Data="M4,4 L12,12 M12,4 L4,12"
+                                  Stroke="{StaticResource TextSecondaryBrush}"
+                                  StrokeThickness="1.5"
+                                  Width="8" Height="8"
+                                  Stretch="Uniform"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Content Area -->
+            <Grid Grid.Row="1" x:Name="ContentGrid">
+                <!-- Control Panel (visible when stopped or popped out) -->
+                <Grid x:Name="ControlPanel" 
+                      Visibility="{Binding CanStart, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <!-- App Icon/Name -->
+                        <TextBlock Text="{Binding App.DisplayName}"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,10"/>
+                        
+                        <!-- Status Text -->
+                        <TextBlock Text="{Binding StatusText}"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="12"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,15"/>
+                        
+                        <!-- Start Button -->
+                        <Button x:Name="StartButton"
+                                Content="▶ Start"
+                                Click="StartButton_Click"
+                                IsEnabled="{Binding CanStart}"
+                                Background="#4CAF50"
+                                Foreground="White"
+                                Style="{StaticResource ActionButtonStyle}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- App Host Panel (where embedded app window goes) -->
+                <Border x:Name="AppHostBorder" 
+                        Background="Transparent"
+                        Visibility="Visible">
+                    <!-- Win32 window will be parented here -->
+                </Border>
+
+                <!-- Floating Control Bar (visible when running) -->
+                <Border x:Name="FloatingControls"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        Margin="0,4,4,0"
+                        Background="#CC2D2D3D"
+                        CornerRadius="4"
+                        Padding="4"
+                        Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="PopOutButton"
+                                Content="Pop Out"
+                                Click="PopOutButton_Click"
+                                Background="#2196F3"
+                                Foreground="White"
+                                Style="{StaticResource ActionButtonStyle}"
+                                ToolTip="Pop out to normal window"/>
+                        
+                        <Button x:Name="StopButton"
+                                Content="■ Stop"
+                                Click="StopButton_Click"
+                                Background="#F44336"
+                                Foreground="White"
+                                Style="{StaticResource ActionButtonStyle}"
+                                ToolTip="Stop the application"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Popped Out Indicator -->
+                <Grid x:Name="PoppedOutPanel" Visibility="Collapsed">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="Running Outside"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   FontSize="14"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,10"/>
+                        
+                        <TextBlock Text="{Binding StatusText}"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   FontSize="12"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,15"/>
+                        
+                        <Button x:Name="PopInButton"
+                                Content="⤵ Pop In"
+                                Click="PopInButton_Click"
+                                Background="#9C27B0"
+                                Foreground="White"
+                                Style="{StaticResource ActionButtonStyle}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <!-- Resize Grip -->
+            <Path Grid.Row="1"
+                  Data="M0,8 L8,0 M3,8 L8,3 M6,8 L8,6"
+                  Stroke="{StaticResource TextSecondaryBrush}"
+                  StrokeThickness="1"
+                  Width="8" Height="8"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Bottom"
+                  Margin="0,0,4,4"
+                  Opacity="0.5"/>
+        </Grid>
+    </Border>
+</Window>
